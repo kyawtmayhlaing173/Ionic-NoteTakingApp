@@ -1,0 +1,51 @@
+<ion-content>
+  <div id="segment-container">
+    <ion-segment (ionChange)="segmentChanged($event)" value="login">
+      <ion-segment-button value="login">
+        <ion-label>Login</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="signup">
+        <ion-label>Signup</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <form [formGroup]="authForm">
+    <div id="login" *ngIf="segment === 'login'">
+      <div id="container">
+        <h1>Welcome Back!</h1>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="emailControl"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input formControlName="passwordControl"></ion-input>
+        </ion-item>
+        <ion-button expand="block" (click)="checkValidation('login')">Log In</ion-button>
+      </div>
+    </div>
+    <div id="signup" *ngIf="segment === 'signup'">
+      <div id="container">
+        <h1>Hello,</h1>
+        <p>Enter your information below</p>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="emailControl"></ion-input>
+        </ion-item>
+        <!-- <div class="error" *ngIf="authForm.get('emailControl').hasError('required')">
+            <p>Email should not be empty</p>
+          </div> -->
+        <ion-item>
+          <ion-label position="floating">Name</ion-label>
+          <ion-input formControlName="nameControl"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input formControlName="passwordControl"></ion-input>
+        </ion-item>
+        <ion-button expand="block" (click)="checkValidation('signup')">Sign Up</ion-button>
+      </div>
+    </div>
+  </form>
+</ion-content>

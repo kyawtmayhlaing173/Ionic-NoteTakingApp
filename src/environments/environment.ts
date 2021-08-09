@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  config: {
+    apiKey: "AIzaSyASxOm7BLoRbhYyCbRmsrdggkP6lEQMchA",
+    authDomain: "ionic-chat-87a6c.firebaseapp.com",
+    projectId: "ionic-chat-87a6c",
+    storageBucket: "ionic-chat-87a6c.appspot.com",
+    messagingSenderId: "787470175804",
+    appId: "1:787470175804:web:53c9e038f6079d917fbd39"
+  }
 };
 
 /*
