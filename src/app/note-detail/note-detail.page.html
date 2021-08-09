@@ -1,0 +1,18 @@
+<ion-header class="ion-no-border">
+  <div id="header-container">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button style="width: 18px; margin-left: 10px" mode="ios" text="" defaultHref="/home">
+          All Notes
+        </ion-back-button>
+      </ion-buttons>
+      <ion-icon slot="end" name="ellipsis-horizontal-outline" (click)="presentPopover()"></ion-icon>
+    </ion-toolbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div *ngFor="let note of noteDetail" id=body-container>
+    <h3>{{note.title}}</h3>
+  </div>
+</ion-content>

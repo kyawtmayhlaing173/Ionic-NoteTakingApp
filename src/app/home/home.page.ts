@@ -61,6 +61,7 @@ export class HomePage {
         .get().then((snapshot) => {
           snapshot.forEach((doc) => {
             let note = new NotesService();
+            note.set_id(doc.id);
             note.set_title(doc.data().title);
             note.set_description(doc.data().description);
             let currentDate = doc.data().createdAt.toDate().toString();
@@ -71,5 +72,12 @@ export class HomePage {
           });
         });
     });
+  }
+
+  goToNoteDetail(note_id) {
+    let note = {
+      id: note_id
+    }
+    this.router.navigate(['/note-detail', note])
   }
 }

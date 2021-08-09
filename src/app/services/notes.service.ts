@@ -5,11 +5,20 @@ import { Injectable } from '@angular/core';
 })
 export class NotesService {
 
+  id: any;
   title: any;
   description: any;
   createdAt: any;
 
   constructor() { }
+
+  set_id(id) {
+    this.id = id;
+  }
+
+  get_id() {
+    return this.id;
+  }
 
   set_title(title) {
     this.title = title;

@@ -25,7 +25,7 @@
     </ion-segment>
   </div>
   <div id="body-container">
-    <ion-row *ngFor="let note of all_notes">
+    <ion-row *ngFor="let note of all_notes" (click)="goToNoteDetail(note.id)">
       <ion-col>
         <div class="notes">
           <p>{{ note.createdAt }}</p>
