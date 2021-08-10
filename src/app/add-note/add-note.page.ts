@@ -23,6 +23,7 @@ export class AddNotePage implements OnInit {
   textColor: any = "#000000";
   saveBtnDisable: any = true;
   note_id: any;
+  folderName: any;
 
   customPopoverOptions: any = {
     header: 'Font Size',
@@ -49,6 +50,8 @@ export class AddNotePage implements OnInit {
     this.currentDate = new Date().toString();
     this.currentDate = this.currentDate.split('2021')[0] + ' 2021';
     this.note_id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.folderName = this.activatedRoute.snapshot.paramMap.get('folderName');
+    console.log(this.note_id, this.folderName);
     if (this.note_id) {
       this.getNote();
     }
@@ -89,7 +92,8 @@ export class AddNotePage implements OnInit {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: data.id,
         fontSize: this.fontSize,
-        textColor: this.textColor
+        textColor: this.textColor,
+        folder: this.folderName
       }).then((res) => {
         // this.navCtrl.pop();
         this.presentToast();
@@ -100,15 +104,17 @@ export class AddNotePage implements OnInit {
   updateNote() {
     let title = this.noteForm.value.titleControl;
     let description = this.noteForm.value.bodyControl;
-    firebase.firestore().collection('notes').doc(this.note_id).update({
-      title,
-      description,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      createdBy: this.note_id,
-      fontSize: this.fontSize,
-      textColor: this.textColor
-    }).then(() => {
-      this.presentToast();
+    this.storage.get('userData').then((data) => {
+      firebase.firestore().collection('notes').doc(this.note_id).update({
+        title,
+        description,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy: data.id,
+        fontSize: this.fontSize,
+        textColor: this.textColor
+      }).then(() => {
+        this.presentToast();
+      });
     });
   }
 

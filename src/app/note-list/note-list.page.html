@@ -1,0 +1,35 @@
+<ion-header class="ion-no-border">
+  <div id="header-container">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button style="width: 18px;" mode="ios" text="" defaultHref="/home">
+        </ion-back-button>
+        <ion-label style="margin-left: 10px;">All Notes</ion-label>
+      </ion-buttons>
+      <!-- <ion-icon name="create-outline" class="edit-icon"></ion-icon> -->
+      <!-- <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"
+        [class]="saveBtnDisable?'btnDisable':''"></ion-icon> -->
+    </ion-toolbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <!-- Add Note -->
+  <div id="add-note-container">
+    <ion-row *ngFor="let note of all_notes" (click)="goToNoteDetail(note.id)">
+      <ion-col>
+        <div class="notes">
+          <p>{{ note.createdAt }}</p>
+          <h5 class="title">{{ note.title }} </h5>
+          <div class="tag">Ideas</div>
+          <p class="description">{{ note.description }}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <div class="add-note">
+      <ion-button (click)="addNotes()">
+        <ion-icon name="add-outline"></ion-icon>&nbsp; Add Notes
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

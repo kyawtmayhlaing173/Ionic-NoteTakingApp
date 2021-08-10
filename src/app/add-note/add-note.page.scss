@@ -9,11 +9,17 @@ ion-header::after {
 #header-container {
     border-bottom: 2px solid #e8e8e8;
     margin: 0 20px;
-    .edit-icon {
-        float: right;
-        margin-right: 20px;
-        zoom: 1.2;
+
+    ion-label {
+      margin-left: 10px;
     }
+
+    .edit-icon, .folder-icon {
+      float: right;
+      margin-right: 20px;
+      zoom: 1.2;
+    }
+
     .save-icon {
       zoom: 1.4;
     }
@@ -24,8 +30,9 @@ ion-content {
         padding: 12px;
     }
     .title-input {
-        font-size: 25px;
+        font-size: 20px;
         font-weight: 500;
+        width: 90%;
     }
     .body-input {
         margin-top: 20px;

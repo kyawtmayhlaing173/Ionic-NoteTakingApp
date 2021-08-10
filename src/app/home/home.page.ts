@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, AlertController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { PopoverComponent } from '../popover/popover.component';
 import { Storage } from '@ionic/storage';
@@ -16,19 +16,24 @@ export class HomePage {
 
   all_notes: any = [];
   username: any;
+  segment: any = 'notes';
+  all_folders: any = [];
 
   constructor(
     private router: Router,
     public popoverController: PopoverController,
     public storage: Storage,
-    public user: UserService
+    public user: UserService,
+    public alertCtrl: AlertController
   ) {
     this.getAllNotes();
     this.getUserName();
+    this.getFolders();
   }
 
   segmentChanged(event) {
     console.log(event.detail.value);
+    this.segment = event.detail.value;
   }
 
   getUserName() {
@@ -68,7 +73,7 @@ export class HomePage {
             let note = new NotesService();
             note.set_id(doc.id);
             note.set_title(doc.data().title);
-            note.set_description(doc.data().description);
+            note.set_description(doc.data().description.substring(0, 40));
             let currentDate = doc.data().createdAt.toDate().toString();
             currentDate = currentDate.split('2021')[0]
             console.log(currentDate);
@@ -86,4 +91,59 @@ export class HomePage {
     }
     this.router.navigate(['/add-note', note])
   }
+
+  getFolders() {
+    firebase.firestore().collection('folders').get().then((snap) => {
+      snap.forEach((doc) => {
+        this.all_folders.push(doc.data().name);
+        console.log(this.all_folders);
+      })
+    });
+  }
+
+  async showPrompt() {
+    let prompt = await this.alertCtrl.create({
+      message: "Enter Folder Name",
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Title',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            console.log('Saved clicked', data.title);
+            this.addFolder(data.title);
+          }
+        }
+      ]
+    });
+    await prompt.present();
+
+  }
+
+  addFolder(folderName) {
+    firebase.firestore().collection('folders').add({
+      name: folderName
+    }).then(() => {
+      console.log('Success');
+      this.getFolders();
+    })
+  }
+
+  getNotesByFolder(folderName) {
+    let folder = {
+      'name': folderName
+    }
+    this.router.navigate(['/note-list', folder]);
+  }
+
 }

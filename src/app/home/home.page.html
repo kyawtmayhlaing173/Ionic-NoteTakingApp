@@ -1,16 +1,10 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <div id="header-container">
-    <ion-row>
-      <ion-col size=1>
-        <ion-icon name="person-circle-outline" class="person"></ion-icon>
-      </ion-col>
-      <ion-col size=9>
-        <p>{{ username }}</p>
-      </ion-col>
-      <ion-col size=2 style="text-align: right;">
-        <ion-icon name="ellipsis-horizontal-outline" (click)="presentPopover()"></ion-icon>
-      </ion-col>
-    </ion-row>
+    <ion-toolbar>
+      <ion-icon slot="start" name="person-circle-outline" class="person-icon"></ion-icon>
+      <p>{{ username }}</p>
+      <ion-icon slot="end" name="ellipsis-horizontal-outline" class="save-icon" (click)="presentPopover()"></ion-icon>
+    </ion-toolbar>
   </div>
 </ion-header>
 <ion-content>
@@ -24,7 +18,9 @@
       </ion-segment-button>
     </ion-segment>
   </div>
-  <div id="body-container">
+
+  <!-- Add Note -->
+  <div id="add-note-container" *ngIf="segment === 'notes'">
     <ion-row *ngFor="let note of all_notes" (click)="goToNoteDetail(note.id)">
       <ion-col>
         <div class="notes">
@@ -35,10 +31,27 @@
         </div>
       </ion-col>
     </ion-row>
+    <div class="add-note">
+      <ion-button (click)="addNotes()">
+        <ion-icon name="add-outline"></ion-icon>&nbsp; Add Notes
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Add Folder -->
+  <div id="add-folder-container" *ngIf="segment === 'folder'">
+    <ion-row>
+      <ion-col col-6 *ngFor="let folder of all_folders" (click)="getNotesByFolder(folder)">
+        <div class="folder-container">
+          <ion-icon name="folder-open-outline"></ion-icon>
+          <ion-label>{{folder}}</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+    <div class="add-folder">
+      <ion-button (click)="showPrompt()">
+        <ion-icon name="add-outline"></ion-icon>&nbsp; Add Folders
+      </ion-button>
+    </div>
   </div>
 </ion-content>
-<ion-footer>
-  <ion-button (click)="addNotes()">
-    <ion-icon name="add-outline"></ion-icon>&nbsp; Add Notes
-  </ion-button>
-</ion-footer>

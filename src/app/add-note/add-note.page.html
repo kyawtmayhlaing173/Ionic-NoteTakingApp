@@ -3,10 +3,11 @@
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-back-button style="width: 18px;" mode="ios" text="" defaultHref="/home">
-          All Notes
         </ion-back-button>
+        <ion-label>All Notes</ion-label>
       </ion-buttons>
       <!-- <ion-icon name="create-outline" class="edit-icon"></ion-icon> -->
+      <ion-icon name="folder-open-outline" class="folder-icon" *ngIf="folderName !== ''"></ion-icon>
       <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"
         [class]="saveBtnDisable?'btnDisable':''"></ion-icon>
     </ion-toolbar>
@@ -16,9 +17,11 @@
 <ion-content>
   <div>
     <form [formGroup]="noteForm" class="note-container">
-      <ion-input (ionInput)="searchChanged($event.target.value)" formControlName="titleControl" maxlength="64"
-        placeholder="Input title" required class="title-input">
-      </ion-input>
+      <div>
+        <ion-input (ionInput)="searchChanged($event.target.value)" formControlName="titleControl" maxlength="64"
+          placeholder="Input title" required class="title-input">
+        </ion-input>
+      </div>
       <ion-label class="currentDate">{{currentDate}}</ion-label>
       <ion-textarea formControlName="bodyControl" placeholder="Enter more information here..." class="body-input"
         rows="25" [style.font-size]="fontSize + 'px'" [style.color]="textColor">
