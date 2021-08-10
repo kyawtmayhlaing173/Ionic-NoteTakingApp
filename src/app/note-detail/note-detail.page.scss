@@ -1,8 +1,41 @@
 #header-container {
     border-bottom: 2px solid #e8e8e8;
     margin: 0 20px;
+    .edit-icon {
+        float: right;
+        margin-right: 20px;
+        zoom: 1.2;
+    }
 }
 
 #body-container {
     margin: 20px;
+
+    ion-label {
+        color: #948f8f;
+    }
+
+    ion-col {
+        margin: auto;
+    }
+
+    .flex-row {
+        margin: auto;
+        display: flex;
+        p {
+            margin: 0px 0px 0px 5px;
+        }
+    }
+
+    .border {
+        border-bottom: 1px solid #e8e8e8;
+        padding: 10px 10px 20px 10px;
+    }
+
+    .description {
+        margin: 20px 0px;
+        ion-label {
+            color: #000000;
+        }
+    }
 }

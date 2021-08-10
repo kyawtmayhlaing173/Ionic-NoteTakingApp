@@ -38,7 +38,11 @@ export class HomePage {
   }
 
   addNotes() {
-    this.router.navigate(['add-note']);
+    // this.router.navigate(['add-note']);
+    let note = {
+      id: ''
+    }
+    this.router.navigate(['/add-note', note])
   }
 
   async presentPopover(ev: any) {
@@ -59,6 +63,7 @@ export class HomePage {
       firebase.firestore().collection('notes')
         .where('createdBy', '==', data.id)
         .get().then((snapshot) => {
+          console.log(data.id)
           snapshot.forEach((doc) => {
             let note = new NotesService();
             note.set_id(doc.id);
@@ -69,6 +74,7 @@ export class HomePage {
             console.log(currentDate);
             note.set_createdAt(currentDate);
             this.all_notes.push(note);
+            console.log(this.all_notes);
           });
         });
     });
@@ -78,6 +84,6 @@ export class HomePage {
     let note = {
       id: note_id
     }
-    this.router.navigate(['/note-detail', note])
+    this.router.navigate(['/add-note', note])
   }
 }

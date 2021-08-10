@@ -1,11 +1,14 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <div id="header-container">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button style="width: 18px; margin-left: 10px" mode="ios" text="" defaultHref="/home">
+        <ion-back-button style="width: 18px;" mode="ios" text="" defaultHref="/home">
+          All Notes
         </ion-back-button>
       </ion-buttons>
-      <ion-icon name="checkmark-outline" slot="end" class="save-btn" (click)="saveNote()"></ion-icon>
+      <!-- <ion-icon name="create-outline" class="edit-icon"></ion-icon> -->
+      <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"
+        [class]="saveBtnDisable?'btnDisable':''"></ion-icon>
     </ion-toolbar>
   </div>
 </ion-header>
@@ -13,7 +16,8 @@
 <ion-content>
   <div>
     <form [formGroup]="noteForm" class="note-container">
-      <ion-input formControlName="titleControl" maxlength="64" placeholder="Input title" required class="title-input">
+      <ion-input (ionInput)="searchChanged($event.target.value)" formControlName="titleControl" maxlength="64"
+        placeholder="Input title" required class="title-input">
       </ion-input>
       <ion-label class="currentDate">{{currentDate}}</ion-label>
       <ion-textarea formControlName="bodyControl" placeholder="Enter more information here..." class="body-input"
@@ -27,17 +31,18 @@
   <div id="font-container" *ngIf="showFontSelector" [style.background]="backgroundColor">
     <ion-item>
       <ion-label>Font Size</ion-label>
-      <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" placeholder="Select One" value="medium"
-        (ionChange)="fontChanged($event)">
-        <ion-select-option value="small">Small</ion-select-option>
-        <ion-select-option value="medium">Medium</ion-select-option>
-        <ion-select-option value="large">Large</ion-select-option>
+      <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" placeholder="Select One"
+        [value]="fontSize" (ionChange)="fontChanged($event)">
+        <ion-select-option value="11">Small</ion-select-option>
+        <ion-select-option value="14">Medium</ion-select-option>
+        <ion-select-option value="17">Large</ion-select-option>
       </ion-select>
     </ion-item>
   </div>
 
   <div id="color-container" *ngIf="showColorSelector" [style.background]="backgroundColor">
     <ion-item lines="none">
+      <div id="black" (click)="setColor('black')"></div>
       <div id="blue" (click)="setColor('blue')"></div>
       <div id="green" (click)="setColor('green')"></div>
       <div id="red" (click)="setColor('red')"></div>

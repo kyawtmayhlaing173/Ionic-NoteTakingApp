@@ -2,10 +2,11 @@
   <div id="header-container">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button style="width: 18px; margin-left: 10px" mode="ios" text="" defaultHref="/home">
+        <ion-back-button style="width: 18px;" mode="ios" text="" defaultHref="/home">
           All Notes
         </ion-back-button>
       </ion-buttons>
+      <ion-icon name="create-outline" class="edit-icon"></ion-icon>
       <ion-icon slot="end" name="ellipsis-horizontal-outline" (click)="presentPopover()"></ion-icon>
     </ion-toolbar>
   </div>
@@ -14,5 +15,32 @@
 <ion-content>
   <div *ngFor="let note of noteDetail" id=body-container>
     <h3>{{note.title}}</h3>
+    <div class="border">
+      <!-- Created By -->
+      <ion-row>
+        <ion-col size=5>
+          <ion-label>Created By</ion-label>
+        </ion-col>
+        <ion-col class="flex-row" size=7>
+          <ion-icon name="person-circle-outline" class="person"></ion-icon>
+          <p>Pinky Hlaing</p>
+        </ion-col>
+      </ion-row>
+      <!-- Last Modified -->
+      <ion-row>
+        <ion-col size=5>
+          <ion-label>Last Modified</ion-label>
+        </ion-col>
+        <ion-col>
+          <p>{{note.createdAt}}</p>
+        </ion-col>
+      </ion-row>
+    </div>
+    <!-- Description -->
+    <div class="description">
+      <ion-label>
+        {{ note.description }}
+      </ion-label>
+    </div>
   </div>
 </ion-content>

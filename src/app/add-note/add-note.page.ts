@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NavController, ToastController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { Storage } from '@ionic/storage';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { NotesService } from '../services/notes.service';
 
 @Component({
   selector: 'app-add-note',
@@ -19,6 +21,8 @@ export class AddNotePage implements OnInit {
   fontSelected = false;
   colorSelected = false;
   textColor: any = "#000000";
+  saveBtnDisable: any = true;
+  note_id: any;
 
   customPopoverOptions: any = {
     header: 'Font Size',
@@ -29,7 +33,9 @@ export class AddNotePage implements OnInit {
     public formBuilder: FormBuilder,
     public toastController: ToastController,
     public navCtrl: NavController,
-    public storage: Storage
+    public storage: Storage,
+    private activatedRoute: ActivatedRoute,
+    private note: NotesService
   ) {
     this.noteForm = this.formBuilder.group({
       titleControl: new FormControl('', Validators.compose([
@@ -42,12 +48,38 @@ export class AddNotePage implements OnInit {
 
     this.currentDate = new Date().toString();
     this.currentDate = this.currentDate.split('2021')[0] + ' 2021';
+    this.note_id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (this.note_id) {
+      this.getNote();
+    }
   }
 
   ngOnInit() {
   }
 
+  getNote() {
+    console.log('Get Note');
+    firebase.firestore().collection('notes').doc(this.note_id).get().then((doc) => {
+      this.noteForm.setValue({
+        titleControl: doc.data().title,
+        bodyControl: doc.data().description
+      });
+      this.fontSize = doc.data().fontSize;
+      this.textColor = doc.data().textColor;
+    });
+    this.saveBtnDisable = false;
+  }
+
   saveNote() {
+    if (this.note_id) {
+      console.log('update note');
+      this.updateNote();
+    } else {
+      this.createNewNote();
+    }
+  }
+
+  createNewNote() {
     let title = this.noteForm.value.titleControl;
     let description = this.noteForm.value.bodyControl;
     this.storage.get('userData').then((data) => {
@@ -55,11 +87,28 @@ export class AddNotePage implements OnInit {
         title,
         description,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        createdBy: data.id
+        createdBy: data.id,
+        fontSize: this.fontSize,
+        textColor: this.textColor
       }).then((res) => {
-        this.navCtrl.pop();
+        // this.navCtrl.pop();
         this.presentToast();
       });
+    });
+  }
+
+  updateNote() {
+    let title = this.noteForm.value.titleControl;
+    let description = this.noteForm.value.bodyControl;
+    firebase.firestore().collection('notes').doc(this.note_id).update({
+      title,
+      description,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdBy: this.note_id,
+      fontSize: this.fontSize,
+      textColor: this.textColor
+    }).then(() => {
+      this.presentToast();
     });
   }
 
@@ -72,12 +121,13 @@ export class AddNotePage implements OnInit {
   }
 
   fontChanged(event) {
-    switch (event.detail.value) {
-      case "medium": this.fontSize = 14; break;
-      case "small": this.fontSize = 11; break;
-      case "large": this.fontSize = 17; break;
-      default: this.fontSize = 14;
-    }
+    this.fontSize = event.detail.value;
+    // switch (event.detail.value) {
+    //   case "medium": this.fontSize = 14; break;
+    //   case "small": this.fontSize = 11; break;
+    //   case "large": this.fontSize = 17; break;
+    //   default: this.fontSize = 14;
+    // }
   }
 
   selectFontEditor() {
@@ -100,6 +150,16 @@ export class AddNotePage implements OnInit {
       case 'green': this.textColor = "#28FFBF"; break;
       case 'blue': this.textColor = "#B5EAEA"; break;
       case 'purple': this.textColor = "#7C83FD"; break;
+      case 'black': this.textColor = "#000000"; break;
+    }
+  }
+
+  searchChanged(val) {
+    console.log('Search has changed', val.length);
+    if (val.length > 0) {
+      this.saveBtnDisable = false;
+    } else {
+      this.saveBtnDisable = true;
     }
   }
 }
