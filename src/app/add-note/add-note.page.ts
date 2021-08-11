@@ -15,12 +15,12 @@ export class AddNotePage implements OnInit {
 
   public noteForm: FormGroup;
   currentDate: any;
-  fontSize: any = 17;
+  fontSize: any = 14;
   showFontSelector = false;
   showColorSelector = false;
   fontSelected = false;
   colorSelected = false;
-  textColor: any = "#000000";
+  textColor: any = "#FFFFFF";
   saveBtnDisable: any = true;
   note_id: any;
   folderName: any;
@@ -152,11 +152,11 @@ export class AddNotePage implements OnInit {
 
   setColor(color) {
     switch (color) {
-      case 'red': this.textColor = "#FF4848"; break;
+      case 'red': this.textColor = "#FF3D68"; break;
       case 'green': this.textColor = "#28FFBF"; break;
       case 'blue': this.textColor = "#B5EAEA"; break;
-      case 'purple': this.textColor = "#7C83FD"; break;
-      case 'black': this.textColor = "#000000"; break;
+      case 'purple': this.textColor = "#C490E4"; break;
+      case 'black': this.textColor = "#FFFFFF"; break;
     }
   }
 

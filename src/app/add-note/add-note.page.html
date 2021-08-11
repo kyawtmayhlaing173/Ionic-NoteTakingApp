@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <div id="header-container">
-    <ion-toolbar>
+    <ion-toolbar [style.background]="textColor">
       <ion-buttons slot="start">
         <ion-back-button style="width: 18px;" mode="ios" text="" defaultHref="/home">
         </ion-back-button>
@@ -14,7 +14,7 @@
   </div>
 </ion-header>
 
-<ion-content>
+<ion-content [style.--background]="textColor">
   <div>
     <form [formGroup]="noteForm" class="note-container">
       <div>
@@ -24,14 +24,14 @@
       </div>
       <ion-label class="currentDate">{{currentDate}}</ion-label>
       <ion-textarea formControlName="bodyControl" placeholder="Enter more information here..." class="body-input"
-        rows="25" [style.font-size]="fontSize + 'px'" [style.color]="textColor">
+        rows="25" [style.font-size]="fontSize + 'px'">
       </ion-textarea>
     </form>
   </div>
 </ion-content>
 
 <ion-footer>
-  <div id="font-container" *ngIf="showFontSelector" [style.background]="backgroundColor">
+  <div id="font-container" *ngIf="showFontSelector" [style.background]="textColor">
     <ion-item>
       <ion-label>Font Size</ion-label>
       <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" placeholder="Select One"
