@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginPage implements OnInit {
     private user: UserService,
     private router: Router,
     public formBuilder: FormBuilder,
+    public toastController: ToastController
   ) {
     this.authForm = this.formBuilder.group({
       emailControl: new FormControl('', Validators.compose([
@@ -27,7 +29,7 @@ export class LoginPage implements OnInit {
       passwordControl: new FormControl('', Validators.compose([
         Validators.required,
         // Password must contain one uppercase letter, one lowercase letter and one digit
-        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9{};:=<>_+-^#$@!%*?&.\/()¶∆√π÷×~|%£©®™℅¢€\'\"„”—…·¡¿±÷°•`´¥]+$')
+        Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
       ])),
       nameControl: new FormControl('', Validators.compose([
         Validators.required
@@ -46,10 +48,12 @@ export class LoginPage implements OnInit {
   }
 
   checkValidation(type) {
-    console.log('Check Validation' + this.authForm.errors);
-    if (this.authForm.valid !== null) {
+    if (this.segment === 'login') {
+      this.authForm.controls.nameControl.setValue('abc');
+    }
+    if (this.authForm.valid) {
       console.log('valid');
-      if (type === 'signup') {
+      if (this.segment === 'signup') {
         this.signUp(
           this.authForm.value.emailControl,
           this.authForm.value.passwordControl,
@@ -61,28 +65,40 @@ export class LoginPage implements OnInit {
           this.authForm.value.passwordControl
         );
       }
-    } else {
-      console.log('Not Valid');
     }
   }
 
   // Sign Up with email and password
   signUp(email, password, name) {
     this.user.signUp(email, password, name).then((response) => {
-      if (response) {
+      if (response['status']) {
         console.log('Success');
+        this.presentToast('Successfully Signup');
         this.router.navigateByUrl('/home', { replaceUrl: true });
+      } else {
+        this.presentToast(response['error']);
       }
     });
   }
 
   logIn(email, password) {
     console.log('Login');
-    this.user.signIn(email, password).then((response) => {
-      if (response) {
+    this.user.logIn(email, password).then((response) => {
+      if (response['status']) {
+        this.presentToast('Successfully Login');
         this.router.navigateByUrl('/home', { replaceUrl: true });
+      } else {
+        this.presentToast(response['error']);
       }
     });
+  }
+
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000
+    });
+    toast.present();
   }
 
 }

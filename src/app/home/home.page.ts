@@ -72,8 +72,9 @@ export class HomePage {
           snapshot.forEach((doc) => {
             let note = new NotesService();
             note.set_id(doc.id);
-            note.set_title(doc.data().title);
+            note.set_title(doc.data().title.substring(0, 40));
             note.set_description(doc.data().description.substring(0, 40));
+            note.set_folder(doc.data().folder);
             let currentDate = doc.data().createdAt.toDate().toString();
             currentDate = currentDate.split('2021')[0]
             console.log(currentDate);

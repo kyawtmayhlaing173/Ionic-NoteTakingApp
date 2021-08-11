@@ -43,7 +43,8 @@ export class AppComponent {
 
   checkLoginStatus() {
     this.storage.get('userData').then((data) => {
-      if (data) {
+      console.log('Check Login Status', data);
+      if (data !== '') {
         this.navCtrl.navigateRoot(['/home']);
       } else {
         this.navCtrl.navigateRoot(['/login']);

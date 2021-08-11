@@ -79,13 +79,24 @@ ion-label {
         background-image: none;
     }
   }
+  .no-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20%;
+    ion-icon {
+      zoom: 2;
+      margin-bottom: 10px;
+    }
+  }
 }
 
 #add-folder-container {
   margin: 30px;
   .folder-container {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     background: #e8e8e8;
     border-radius: 10px;
     margin: auto;

@@ -26,11 +26,16 @@
         <div class="notes">
           <p>{{ note.createdAt }}</p>
           <h5 class="title">{{ note.title }} </h5>
-          <div class="tag">Ideas</div>
+          <div class="tag" *ngIf="note.folderName === null || !note.folderName">Unclassified</div>
+          <div class="tag" *ngIf="note.folderName !== null">{{ note.folderName }}</div>
           <p class="description">{{ note.description }}</p>
         </div>
       </ion-col>
     </ion-row>
+    <div class="no-result" *ngIf="all_notes.length === 0">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>Sorry. No Result Found</p>
+    </div>
     <div class="add-note">
       <ion-button (click)="addNotes()">
         <ion-icon name="add-outline"></ion-icon>&nbsp; Add Notes

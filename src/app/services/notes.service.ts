@@ -9,6 +9,7 @@ export class NotesService {
   title: any;
   description: any;
   createdAt: any;
+  folderName: any;
 
   constructor() { }
 
@@ -42,5 +43,13 @@ export class NotesService {
 
   get_createdAt() {
     return this.createdAt;
+  }
+
+  set_folder(folderName) {
+    this.folderName = folderName;
+  }
+
+  get_folder() {
+    return this.folderName;
   }
 }

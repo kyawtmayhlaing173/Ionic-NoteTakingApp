@@ -11,40 +11,57 @@
   </div>
 
   <form [formGroup]="authForm">
-    <div id="login" *ngIf="segment === 'login'">
+    <div id="login">
       <div id="container">
-        <h1>Welcome Back!</h1>
-        <ion-item>
-          <ion-label position="floating">Email</ion-label>
-          <ion-input formControlName="emailControl"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Password</ion-label>
-          <ion-input formControlName="passwordControl"></ion-input>
-        </ion-item>
-        <ion-button expand="block" (click)="checkValidation('login')">Log In</ion-button>
-      </div>
-    </div>
-    <div id="signup" *ngIf="segment === 'signup'">
-      <div id="container">
-        <h1>Hello,</h1>
-        <p>Enter your information below</p>
-        <ion-item>
-          <ion-label position="floating">Email</ion-label>
-          <ion-input formControlName="emailControl"></ion-input>
-        </ion-item>
-        <!-- <div class="error" *ngIf="authForm.get('emailControl').hasError('required')">
-            <p>Email should not be empty</p>
-          </div> -->
-        <ion-item>
+        <h1 *ngIf="segment === 'login'">Welcome Back!</h1>
+        <div *ngIf="segment === 'signup'">
+          <h1>Hello,</h1>
+          <p>Enter your information below</p>
+        </div>
+        <ion-item *ngIf="segment === 'signup'">
           <ion-label position="floating">Name</ion-label>
           <ion-input formControlName="nameControl"></ion-input>
         </ion-item>
+        <!-- Error for Name Field -->
+        <div>
+          <div class="error"
+            *ngIf="authForm.get('nameControl').hasError('required') && authForm.get('passwordControl').touched">
+            <p>* Password Must Not Be Empty</p>
+          </div>
+        </div>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="emailControl"></ion-input>
+        </ion-item>
+        <!-- Error for email -->
+        <div>
+          <div class="error"
+            *ngIf="authForm.get('emailControl').hasError('required') && authForm.get('emailControl').touched">
+            <p>* Email Must Not Be Empty</p>
+          </div>
+          <div class="error"
+            *ngIf="authForm.get('emailControl').hasError('pattern') && authForm.get('emailControl').touched">
+            <p>Invalid Email Format</p>
+          </div>
+        </div>
         <ion-item>
           <ion-label position="floating">Password</ion-label>
-          <ion-input formControlName="passwordControl"></ion-input>
+          <ion-input formControlName="passwordControl" type="password"></ion-input>
         </ion-item>
-        <ion-button expand="block" (click)="checkValidation('signup')">Sign Up</ion-button>
+        <!-- Error for password -->
+        <div>
+          <div class="error"
+            *ngIf="authForm.get('passwordControl').hasError('required') && authForm.get('passwordControl').touched">
+            <p>* Password Must Not Be Empty</p>
+          </div>
+          <div class="error"
+            *ngIf="authForm.get('passwordControl').hasError('pattern') && authForm.get('passwordControl').touched">
+            <p>* Password must contain at least one lowercase letter, one uppercase letter, one digit and one special
+              character</p>
+          </div>
+        </div>
+        <ion-button expand="block" (click)="checkValidation()" *ngIf="segment === 'login'">Log In</ion-button>
+        <ion-button expand="block" (click)="checkValidation('signup')" *ngIf="segment === 'signup'">Sign Up</ion-button>
       </div>
     </div>
   </form>

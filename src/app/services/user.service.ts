@@ -13,10 +13,12 @@ export class UserService {
     public storage: Storage
   ) { }
 
-  signIn(email, password) {
+  logIn(email, password) {
     return new Promise(resolve => {
       firebase.auth().signInWithEmailAndPassword(email, password).then(async (user) => {
-        resolve(true);
+        resolve({ status: true });
+      }).catch((error) => {
+        resolve({ status: false, error: error.message })
       });
     });
   }
@@ -29,7 +31,9 @@ export class UserService {
           name,
           userID: await user.user.uid
         }).then(() => {
-          resolve(true);
+          resolve({ status: true });
+        }).catch((error) => {
+          resolve({ status: false, error: error.message })
         });
       });
     });
