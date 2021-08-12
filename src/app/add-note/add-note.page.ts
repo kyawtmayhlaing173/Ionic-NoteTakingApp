@@ -24,12 +24,11 @@ export class AddNotePage implements OnInit {
       options: ['left', 'right']
     }
   };
-  editorData: any;
+  editorData: any = 'Hello World!';
   currentDate: any;
   saveBtnDisable: any = true;
   note_id: any;
   folderName: any;
-  description: any;
   customPopoverOptions: any = {
     header: 'Font Size',
     message: 'Please select your font size'
@@ -72,7 +71,6 @@ export class AddNotePage implements OnInit {
           titleControl: doc.data().title,
         });
         this.editorData = doc.data().description;
-        this.editorData = "<ul><li><i><strong>Wonderful World</strong></i></li></ul>"
       });
     });
     this.saveBtnDisable = false;
@@ -91,7 +89,7 @@ export class AddNotePage implements OnInit {
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes').add({
         title,
-        description: this.description,
+        description: this.editorData,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: data.id,
         folder: this.folderName
@@ -104,10 +102,11 @@ export class AddNotePage implements OnInit {
 
   updateNote() {
     let title = this.noteForm.value.titleControl;
+    console.log(this.editorData);
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes').doc(this.note_id).update({
         title,
-        description: this.description,
+        description: this.editorData,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: data.id,
         folder: this.folderName
@@ -133,11 +132,5 @@ export class AddNotePage implements OnInit {
     } else {
       this.saveBtnDisable = true;
     }
-  }
-
-  public onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
-    this.description = data;
-    console.log('Text on Change', data);
   }
 }

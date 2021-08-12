@@ -24,8 +24,7 @@
       <ion-label class="currentDate">{{currentDate}}</ion-label>
     </form>
     <div class="body-input">
-      <ckeditor [config]="editorConfiguration" [editor]="Editor" (change)="onChange($event)" [data]="editorData"
-        [(ngModel)]="editorData">
+      <ckeditor [config]="editorConfiguration" [editor]="Editor" [data]="editorData" [(ngModel)]="editorData">
       </ckeditor>
     </div>
   </div>
