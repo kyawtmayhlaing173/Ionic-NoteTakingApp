@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController, ToastController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { Storage } from '@ionic/storage';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { NotesService } from '../services/notes.service';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 
 @Component({
   selector: 'app-add-note',
@@ -14,17 +16,20 @@ import { NotesService } from '../services/notes.service';
 export class AddNotePage implements OnInit {
 
   public noteForm: FormGroup;
+  public Editor = ClassicEditor;
+  public editorConfiguration = {
+    toolbar: ['heading', '|', 'bold', 'italic',
+      'bulletedList', 'numberedList', 'undo', 'redo'],
+    alignment: {
+      options: ['left', 'right']
+    }
+  };
+  editorData: any;
   currentDate: any;
-  fontSize: any = 14;
-  showFontSelector = false;
-  showColorSelector = false;
-  fontSelected = false;
-  colorSelected = false;
-  textColor: any = "#FFFFFF";
   saveBtnDisable: any = true;
   note_id: any;
   folderName: any;
-
+  description: any;
   customPopoverOptions: any = {
     header: 'Font Size',
     message: 'Please select your font size'
@@ -36,13 +41,11 @@ export class AddNotePage implements OnInit {
     public navCtrl: NavController,
     public storage: Storage,
     private activatedRoute: ActivatedRoute,
-    private note: NotesService
+    private note: NotesService,
+    private zone: NgZone,
   ) {
     this.noteForm = this.formBuilder.group({
       titleControl: new FormControl('', Validators.compose([
-        Validators.required
-      ])),
-      bodyControl: new FormControl('', Validators.compose([
         Validators.required
       ]))
     });
@@ -63,19 +66,20 @@ export class AddNotePage implements OnInit {
   getNote() {
     console.log('Get Note');
     firebase.firestore().collection('notes').doc(this.note_id).get().then((doc) => {
-      this.noteForm.setValue({
-        titleControl: doc.data().title,
-        bodyControl: doc.data().description
+      console.log(doc.data());
+      this.zone.run(() => {
+        this.noteForm.setValue({
+          titleControl: doc.data().title,
+        });
+        this.editorData = doc.data().description;
+        this.editorData = "<ul><li><i><strong>Wonderful World</strong></i></li></ul>"
       });
-      this.fontSize = doc.data().fontSize;
-      this.textColor = doc.data().textColor;
     });
     this.saveBtnDisable = false;
   }
 
   saveNote() {
     if (this.note_id) {
-      console.log('update note');
       this.updateNote();
     } else {
       this.createNewNote();
@@ -84,36 +88,32 @@ export class AddNotePage implements OnInit {
 
   createNewNote() {
     let title = this.noteForm.value.titleControl;
-    let description = this.noteForm.value.bodyControl;
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes').add({
         title,
-        description,
+        description: this.description,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: data.id,
-        fontSize: this.fontSize,
-        textColor: this.textColor,
         folder: this.folderName
       }).then((res) => {
-        // this.navCtrl.pop();
         this.presentToast();
+        this.navCtrl.pop();
       });
     });
   }
 
   updateNote() {
     let title = this.noteForm.value.titleControl;
-    let description = this.noteForm.value.bodyControl;
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes').doc(this.note_id).update({
         title,
-        description,
+        description: this.description,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: data.id,
-        fontSize: this.fontSize,
-        textColor: this.textColor
+        folder: this.folderName
       }).then(() => {
         this.presentToast();
+        this.navCtrl.pop();
       });
     });
   }
@@ -126,40 +126,6 @@ export class AddNotePage implements OnInit {
     toast.present();
   }
 
-  fontChanged(event) {
-    this.fontSize = event.detail.value;
-    // switch (event.detail.value) {
-    //   case "medium": this.fontSize = 14; break;
-    //   case "small": this.fontSize = 11; break;
-    //   case "large": this.fontSize = 17; break;
-    //   default: this.fontSize = 14;
-    // }
-  }
-
-  selectFontEditor() {
-    this.fontSelected = true;
-    this.colorSelected = !this.fontSelected;
-    this.showFontSelector = true;
-    this.showColorSelector = !this.showFontSelector;
-  }
-
-  selectColorEditor() {
-    this.colorSelected = true;
-    this.fontSelected = !this.colorSelected;
-    this.showColorSelector = true;
-    this.showFontSelector = !this.showColorSelector;
-  }
-
-  setColor(color) {
-    switch (color) {
-      case 'red': this.textColor = "#FF3D68"; break;
-      case 'green': this.textColor = "#28FFBF"; break;
-      case 'blue': this.textColor = "#B5EAEA"; break;
-      case 'purple': this.textColor = "#C490E4"; break;
-      case 'black': this.textColor = "#FFFFFF"; break;
-    }
-  }
-
   searchChanged(val) {
     console.log('Search has changed', val.length);
     if (val.length > 0) {
@@ -167,5 +133,11 @@ export class AddNotePage implements OnInit {
     } else {
       this.saveBtnDisable = true;
     }
+  }
+
+  public onChange({ editor }: ChangeEvent) {
+    const data = editor.getData();
+    this.description = data;
+    console.log('Text on Change', data);
   }
 }

@@ -6,7 +6,6 @@
         </ion-back-button>
         <ion-label>All Notes</ion-label>
       </ion-buttons>
-      <!-- <ion-icon name="create-outline" class="edit-icon"></ion-icon> -->
       <ion-icon name="folder-open-outline" class="folder-icon" *ngIf="folderName !== ''"></ion-icon>
       <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"
         [class]="saveBtnDisable?'btnDisable':''"></ion-icon>
@@ -23,44 +22,11 @@
         </ion-input>
       </div>
       <ion-label class="currentDate">{{currentDate}}</ion-label>
-      <ion-textarea formControlName="bodyControl" placeholder="Enter more information here..." class="body-input"
-        rows="25" [style.font-size]="fontSize + 'px'">
-      </ion-textarea>
     </form>
+    <div class="body-input">
+      <ckeditor [config]="editorConfiguration" [editor]="Editor" (change)="onChange($event)" [data]="editorData"
+        [(ngModel)]="editorData">
+      </ckeditor>
+    </div>
   </div>
 </ion-content>
-
-<ion-footer>
-  <div id="font-container" *ngIf="showFontSelector" [style.background]="textColor">
-    <ion-item>
-      <ion-label>Font Size</ion-label>
-      <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" placeholder="Select One"
-        [value]="fontSize" (ionChange)="fontChanged($event)">
-        <ion-select-option value="11">Small</ion-select-option>
-        <ion-select-option value="14">Medium</ion-select-option>
-        <ion-select-option value="17">Large</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </div>
-
-  <div id="color-container" *ngIf="showColorSelector" [style.background]="backgroundColor">
-    <ion-item lines="none">
-      <div id="black" (click)="setColor('black')"></div>
-      <div id="blue" (click)="setColor('blue')"></div>
-      <div id="green" (click)="setColor('green')"></div>
-      <div id="red" (click)="setColor('red')"></div>
-      <div id="purple" (click)="setColor('purple')"></div>
-    </ion-item>
-  </div>
-
-  <ion-row>
-    <ion-col>
-      <ion-icon name="text-outline" [class]="fontSelected? 'fontActive' : 'fontInactive'" (click)="selectFontEditor()">
-      </ion-icon>
-    </ion-col>
-    <ion-col>
-      <ion-icon name="color-palette-outline" [class]="colorSelected? 'colorActive' : 'colorInactive'"
-        (click)="selectColorEditor()"></ion-icon>
-    </ion-col>
-  </ion-row>
-</ion-footer>

@@ -18,6 +18,7 @@ export class HomePage {
   username: any;
   segment: any = 'notes';
   all_folders: any = [];
+  noResult = false;
 
   constructor(
     private router: Router,
@@ -25,7 +26,9 @@ export class HomePage {
     public storage: Storage,
     public user: UserService,
     public alertCtrl: AlertController
-  ) {
+  ) { }
+
+  ionViewWillEnter() {
     this.getAllNotes();
     this.getUserName();
     this.getFolders();
@@ -65,23 +68,28 @@ export class HomePage {
 
   getAllNotes() {
     this.storage.get('userData').then((data) => {
+      this.all_notes = [];
       firebase.firestore().collection('notes')
         .where('createdBy', '==', data.id)
         .get().then((snapshot) => {
           console.log(data.id)
-          snapshot.forEach((doc) => {
-            let note = new NotesService();
-            note.set_id(doc.id);
-            note.set_title(doc.data().title.substring(0, 40));
-            note.set_description(doc.data().description.substring(0, 40));
-            note.set_folder(doc.data().folder);
-            let currentDate = doc.data().createdAt.toDate().toString();
-            currentDate = currentDate.split('2021')[0]
-            console.log(currentDate);
-            note.set_createdAt(currentDate);
-            this.all_notes.push(note);
-            console.log(this.all_notes);
-          });
+          if (snapshot.size > 0) {
+            snapshot.forEach((doc) => {
+              let note = new NotesService();
+              note.set_id(doc.id);
+              note.set_title(doc.data().title.substring(0, 40));
+              note.set_description(doc.data().description.substring(0, 40));
+              note.set_folder(doc.data().folder);
+              let currentDate = doc.data().createdAt.toDate().toString();
+              currentDate = currentDate.split('2021')[0]
+              console.log(currentDate);
+              note.set_createdAt(currentDate);
+              this.all_notes.push(note);
+              console.log(this.all_notes);
+            });
+          } else {
+            this.noResult = true;
+          }
         });
     });
   }
@@ -94,6 +102,7 @@ export class HomePage {
   }
 
   getFolders() {
+    this.all_folders = [];
     firebase.firestore().collection('folders').get().then((snap) => {
       snap.forEach((doc) => {
         this.all_folders.push(doc.data().name);
