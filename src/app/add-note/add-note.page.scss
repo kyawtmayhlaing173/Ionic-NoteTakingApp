@@ -8,16 +8,24 @@ ion-header::after {
 
 #header-container {
     border-bottom: 2px solid #e8e8e8;
-    margin: 0 20px;
+    margin: 0 10px;
 
     ion-label {
       margin-left: 10px;
     }
 
+    .delete-icon {
+      float: right;
+      margin-right: 10px;
+      zoom: 1;
+      margin-top: 2px;
+    }
+
     .edit-icon, .folder-icon {
       float: right;
-      margin-right: 20px;
+      margin-right: 10px;
       zoom: 1.2;
+      color: #343A40;
     }
 
     .save-icon {
@@ -37,7 +45,6 @@ ion-content {
 
   .currentDate {
       color: #9d9d9d;
-      margin-left: 8px;
       font-size: 14px;
   }
 }

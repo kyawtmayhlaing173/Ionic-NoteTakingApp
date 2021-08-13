@@ -6,9 +6,6 @@
         </ion-back-button>
         <ion-label style="margin-left: 10px;">All Notes</ion-label>
       </ion-buttons>
-      <!-- <ion-icon name="create-outline" class="edit-icon"></ion-icon> -->
-      <!-- <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"
-        [class]="saveBtnDisable?'btnDisable':''"></ion-icon> -->
     </ion-toolbar>
   </div>
 </ion-header>
@@ -23,11 +20,10 @@
           <h5 class="title">{{ note.title }} </h5>
           <div class="tag" *ngIf="note.folderName === null || !note.folderName">Unclassified</div>
           <div class="tag" *ngIf="note.folderName !== null">{{ note.folderName }}</div>
-          <p class="description">{{ note.description }}</p>
         </div>
       </ion-col>
     </ion-row>
-    <div class="no-result" *ngIf="all_notes.length === 0">
+    <div class="no-result" *ngIf="noResult">
       <ion-icon name="search-outline"></ion-icon>
       <p>Sorry. No Result Found</p>
     </div>

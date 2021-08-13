@@ -27,6 +27,10 @@ const routes: Routes = [
     path: 'note-list',
     loadChildren: () => import('./note-list/note-list.module').then( m => m.NoteListPageModule)
   },
+  {
+    path: 'add-folder-modal',
+    loadChildren: () => import('./add-folder-modal/add-folder-modal.module').then( m => m.AddFolderModalPageModule)
+  },
 ];
 
 @NgModule({

@@ -33,3 +33,23 @@
         transform-origin: right top!important;
     }
 }
+
+.add-folder-modal-css .modal-wrapper{
+    height: 250px;
+    width: 80%;
+    position: center;
+    overflow-y: hidden;
+    --border-radius: 10px !important;
+
+    ion-title {
+        padding: 0px;
+    }
+    ion-icon {
+        padding-right: 5px;
+    }
+    
+}
+
+.modal-shadow{
+    display: none;
+}

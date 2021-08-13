@@ -1,12 +1,12 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NavController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, NavController, ToastController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { Storage } from '@ionic/storage';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { NotesService } from '../services/notes.service';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import { AddFolderModalPage } from '../add-folder-modal/add-folder-modal.page';
 
 @Component({
   selector: 'app-add-note',
@@ -42,6 +42,8 @@ export class AddNotePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private note: NotesService,
     private zone: NgZone,
+    public modalController: ModalController,
+    public alertController: AlertController
   ) {
     this.noteForm = this.formBuilder.group({
       titleControl: new FormControl('', Validators.compose([
@@ -71,6 +73,7 @@ export class AddNotePage implements OnInit {
           titleControl: doc.data().title,
         });
         this.editorData = doc.data().description;
+        this.folderName = doc.data().folder;
       });
     });
     this.saveBtnDisable = false;
@@ -94,7 +97,7 @@ export class AddNotePage implements OnInit {
         createdBy: data.id,
         folder: this.folderName
       }).then((res) => {
-        this.presentToast();
+        this.presentToast('Your note has been saved.');
         this.navCtrl.pop();
       });
     });
@@ -102,7 +105,6 @@ export class AddNotePage implements OnInit {
 
   updateNote() {
     let title = this.noteForm.value.titleControl;
-    console.log(this.editorData);
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes').doc(this.note_id).update({
         title,
@@ -111,15 +113,15 @@ export class AddNotePage implements OnInit {
         createdBy: data.id,
         folder: this.folderName
       }).then(() => {
-        this.presentToast();
+        this.presentToast('Your note has been successfully updated.');
         this.navCtrl.pop();
       });
     });
   }
 
-  async presentToast() {
+  async presentToast(msg) {
     const toast = await this.toastController.create({
-      message: 'Your note has been saved.',
+      message: msg,
       duration: 2000
     });
     toast.present();
@@ -132,5 +134,55 @@ export class AddNotePage implements OnInit {
     } else {
       this.saveBtnDisable = true;
     }
+  }
+
+  async presentModal() {
+    console.log('Present Modal', this.folderName);
+    const modal = await this.modalController.create({
+      component: AddFolderModalPage,
+      cssClass: 'add-folder-modal-css',
+      backdropDismiss: true,
+      keyboardClose: false,
+      componentProps: {
+        folderName: this.folderName
+      }
+    });
+    await modal.present();
+    modal.onDidDismiss().then((params) => {
+      console.log('Modal is dismissed', params.data);
+      this.folderName = params.data;
+    });
+  }
+
+  deleteNote() {
+    firebase.firestore().collection('notes').doc(this.note_id).delete().then(() => {
+      this.presentToast('Successfully delete the note');
+    });
+  }
+
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Are you sure?',
+      message: 'Do you want to delete this note?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.deleteNote();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Choose Folder</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-radio-group [value]="selectedFolder" (ionChange)="radioGroupChange($event)">
+      <ion-item *ngFor="let folder of all_folders">
+        <ion-label>
+          <ion-icon name="folder-open-outline" class="folder-icon" *ngIf="folderName !== ''"></ion-icon>
+          {{ folder }}
+        </ion-label>
+        <ion-radio slot="end" [value]="folder"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>

@@ -106,7 +106,6 @@ export class HomePage {
     firebase.firestore().collection('folders').get().then((snap) => {
       snap.forEach((doc) => {
         this.all_folders.push(doc.data().name);
-        console.log(this.all_folders);
       })
     });
   }
@@ -114,6 +113,7 @@ export class HomePage {
   async showPrompt() {
     let prompt = await this.alertCtrl.create({
       message: "Enter Folder Name",
+      mode: "ios",
       inputs: [
         {
           name: 'title',

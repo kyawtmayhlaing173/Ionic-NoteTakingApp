@@ -9,7 +9,7 @@ ion-label {
 
 #header-container {
     border-bottom: 2px solid #e8e8e8;
-    margin: 0 20px;
+    margin: 0 10px;
     p {
       margin-left: 10px;
       font-size: 14px!important
@@ -95,8 +95,8 @@ ion-label {
 #add-folder-container {
   margin: 30px;
   .folder-container {
-    width: 150px;
-    height: 150px;
+    width: auto;
+    height: 120px;
     background: #e8e8e8;
     border-radius: 10px;
     margin: auto;

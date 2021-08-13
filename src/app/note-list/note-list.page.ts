@@ -13,6 +13,7 @@ export class NoteListPage implements OnInit {
 
   all_notes: any = [];
   folderName: any;
+  noResult = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -48,6 +49,8 @@ export class NoteListPage implements OnInit {
               this.all_notes.push(note);
               console.log(this.all_notes);
             });
+          } else {
+            this.noResult = true;
           }
         });
     });

@@ -6,7 +6,10 @@
         </ion-back-button>
         <ion-label>All Notes</ion-label>
       </ion-buttons>
-      <ion-icon name="folder-open-outline" class="folder-icon" *ngIf="folderName !== ''"></ion-icon>
+      <fa-icon icon="trash-alt" class="delete-icon" (click)="presentAlertConfirm()"></fa-icon>
+      <fa-icon icon="folder-plus" class="folder-icon" [style.color]="folderName === null ? '#B2B1B9': '#343A40'"
+        (click)="presentModal()">
+      </fa-icon>
       <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"
         [class]="saveBtnDisable?'btnDisable':''"></ion-icon>
     </ion-toolbar>
