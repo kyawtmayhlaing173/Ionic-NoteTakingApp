@@ -1,6 +1,6 @@
 <ion-content>
   <div id="segment-container">
-    <ion-segment (ionChange)="segmentChanged($event)" value="login">
+    <ion-segment (ionChange)="segmentChanged($event)" value="login" mode="md">
       <ion-segment-button value="login">
         <ion-label>Login</ion-label>
       </ion-segment-button>
@@ -25,8 +25,8 @@
         <!-- Error for Name Field -->
         <div>
           <div class="error"
-            *ngIf="authForm.get('nameControl').hasError('required') && authForm.get('passwordControl').touched">
-            <p>* Password Must Not Be Empty</p>
+            *ngIf="authForm.get('nameControl').hasError('required') && authForm.get('passwordControl').touched && segment=== 'signup'">
+            <p>* Name Must Not Be Empty</p>
           </div>
         </div>
         <ion-item>

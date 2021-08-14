@@ -98,7 +98,7 @@ export class AddNotePage implements OnInit {
         folder: this.folderName
       }).then((res) => {
         this.presentToast('Your note has been saved.');
-        this.navCtrl.pop();
+        this.navCtrl.navigateRoot(['/home']);
       });
     });
   }
@@ -157,6 +157,7 @@ export class AddNotePage implements OnInit {
   deleteNote() {
     firebase.firestore().collection('notes').doc(this.note_id).delete().then(() => {
       this.presentToast('Successfully delete the note');
+      this.navCtrl.pop();
     });
   }
 
