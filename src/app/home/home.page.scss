@@ -115,7 +115,7 @@ ion-label {
   .add-folder {
     left: 50%;
     position: absolute;
-    bottom: 20px;
+    bottom: 0;
     transform: translate(-50%, -50%);
 
     &.footer-md::before {
