@@ -71,7 +71,7 @@ ion-label {
   }
   .add-note {
     left: 50%;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     transform: translate(-50%, -50%);
 
@@ -114,8 +114,8 @@ ion-label {
   }
   .add-folder {
     left: 50%;
-    position: fixed;
-    bottom: 0;
+    position: absolute;
+    bottom: 20px;
     transform: translate(-50%, -50%);
 
     &.footer-md::before {
