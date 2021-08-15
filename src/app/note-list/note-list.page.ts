@@ -19,16 +19,26 @@ export class NoteListPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private storage: Storage
-  ) {
+  ) { }
+
+  ionViewDidEnter() {
     this.folderName = this.activatedRoute.snapshot.paramMap.get('name');
     console.log(this.folderName);
     this.getNoteByFolderName(this.folderName);
+  }
+
+  doRefresh(event) {
+    this.getNoteByFolderName(this.folderName);
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 
   ngOnInit() {
   }
 
   getNoteByFolderName(folderName) {
+    this.all_notes = [];
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes')
         .where('folder', '==', this.folderName)

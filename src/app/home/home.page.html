@@ -19,6 +19,10 @@
     </ion-segment>
   </div>
 
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <!-- Add Note -->
   <div id="add-note-container" *ngIf="segment === 'notes'">
     <ion-row *ngFor="let note of all_notes" (click)="goToNoteDetail(note.id)">
@@ -33,7 +37,7 @@
     </ion-row>
     <div class="no-result" *ngIf="noResult">
       <ion-icon name="search-outline"></ion-icon>
-      <p>No note yet</p>
+      <p>No note to show</p>
     </div>
     <div class="add-note">
       <ion-button (click)="addNotes()">

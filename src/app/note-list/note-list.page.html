@@ -4,13 +4,16 @@
       <ion-buttons slot="start">
         <ion-back-button style="width: 18px;" mode="ios" text="" defaultHref="/home">
         </ion-back-button>
-        <ion-label style="margin-left: 10px;">All Notes</ion-label>
+        <ion-label style="margin-left: 10px;">All Notes - {{ folderName }}</ion-label>
       </ion-buttons>
     </ion-toolbar>
   </div>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <!-- Add Note -->
   <div id="add-note-container">
     <ion-row *ngFor="let note of all_notes" (click)="goToNoteDetail(note.id)">
@@ -25,7 +28,7 @@
     </ion-row>
     <div class="no-result" *ngIf="noResult">
       <ion-icon name="search-outline"></ion-icon>
-      <p>Sorry. No Result Found</p>
+      <p>No note to show</p>
     </div>
     <div class="add-note">
       <ion-button (click)="addNotes()">

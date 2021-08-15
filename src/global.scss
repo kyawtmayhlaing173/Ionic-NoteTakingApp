@@ -25,6 +25,11 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+ion-app {
+    margin-top: env(safe-area-inset-top);
+    margin-bottom: env(safe-area-inset-bottom)
+}
+
 .popover-css {
     .popover-content {
         top: 50px!important;
@@ -52,4 +57,9 @@
 
 .modal-shadow{
     display: none;
+}
+
+.prompt-css .modal-wrapper{
+    font-size: 15px;
+    font-weight: 500;
 }

@@ -7,6 +7,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { NgCalendarModule } from 'ionic2-calendar';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
@@ -21,7 +22,8 @@ import { AppRoutingModule } from './app-routing.module';
     IonicModule.forRoot(),
     AppRoutingModule,
     FontAwesomeModule,
-    CKEditorModule
+    CKEditorModule,
+    NgCalendarModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Storage],
   bootstrap: [AppComponent],

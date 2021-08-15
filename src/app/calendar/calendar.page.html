@@ -1,0 +1,48 @@
+<ion-header class="ion-no-border">
+  <div id="header-container">
+    <ion-toolbar>
+      <ion-icon slot="start" name="person-circle-outline" class="person-icon"></ion-icon>
+      <p>{{ username }}</p>
+      <ion-icon slot="end" name="ellipsis-horizontal-outline" class="save-icon" (click)="presentPopover()"></ion-icon>
+    </ion-toolbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <ion-segment [(ngModel)]="calendar.mode">
+      <ion-segment-button value="month">
+        <ion-label>Month</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="week">
+        <ion-label>Week</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="day">
+        <ion-label>Day</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-col size="8" class="ion-text-center">
+      <h3>{{ viewTitle }}</h3>
+    </ion-col>
+
+    <ion-row *ngIf="!enableAddEvent">
+      <ion-col size="6">
+        <ion-button (click)="showPrompt()" expand="block" fill="outline">
+          Add event
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button (click)="removeEvents()" expand="block" fill="outline">
+          Remove all events
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <calendar [eventSource]="eventSource" [calendarMode]="calendar.mode" [currentDate]="calendar.currentDate"
+      (onEventSelected)="onEventSelected($event)" (onTitleChanged)="onViewTitleChanged($event)" startHour="6"
+      endHour="20" step="30" startingDayWeek="1" (onCurrentDateChanged)="onCurrentDateChanged($event)">
+    </calendar>
+  </div>
+
+</ion-content>

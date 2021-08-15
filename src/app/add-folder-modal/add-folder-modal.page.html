@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-radio-group [value]="selectedFolder" (ionChange)="radioGroupChange($event)">
+    <ion-radio-group [value]="selectedFolder" (ionChange)="radioGroupChange($event)" mode="ios">
       <ion-item *ngFor="let folder of all_folders">
         <ion-label>
           <ion-icon name="folder-open-outline" class="folder-icon" *ngIf="folderName !== ''"></ion-icon>

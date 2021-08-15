@@ -7,7 +7,7 @@
         <ion-label>All Notes</ion-label>
       </ion-buttons>
       <fa-icon icon="trash-alt" class="delete-icon" (click)="presentAlertConfirm()"></fa-icon>
-      <fa-icon icon="folder-plus" class="folder-icon" [style.color]="folderName === null ? '#B2B1B9': '#343A40'"
+      <fa-icon icon="folder-plus" class="folder-icon" [style.color]="!folderName? '#B2B1B9': '#343A40'"
         (click)="presentModal()">
       </fa-icon>
       <ion-icon name="checkmark-outline" slot="end" (click)="saveNote()" class="save-icon"

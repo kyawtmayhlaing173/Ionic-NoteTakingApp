@@ -31,10 +31,12 @@ export class UserService {
           name,
           userID: await user.user.uid
         }).then(() => {
+          console.log('Catching');
           resolve({ status: true });
-        }).catch((error) => {
-          resolve({ status: false, error: error.message })
-        });
+        })
+      }).catch((error) => {
+        console.log('Catching Error');
+        resolve({ status: false, error: error.message })
       });
     });
   }

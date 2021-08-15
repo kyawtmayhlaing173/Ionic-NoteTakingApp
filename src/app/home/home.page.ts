@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { PopoverController, AlertController } from '@ionic/angular';
+import { PopoverController, AlertController, LoadingController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { PopoverComponent } from '../popover/popover.component';
 import { Storage } from '@ionic/storage';
@@ -25,13 +25,26 @@ export class HomePage {
     public popoverController: PopoverController,
     public storage: Storage,
     public user: UserService,
-    public alertCtrl: AlertController
-  ) { }
+    public alertCtrl: AlertController,
+    public loadingController: LoadingController
+  ) {
+    this.presentLoading();
+    this.loadInitialData();
+  }
 
-  ionViewWillEnter() {
+  loadInitialData() {
     this.getAllNotes();
     this.getUserName();
     this.getFolders();
+  }
+
+  ionViewWillEnter() { }
+
+  doRefresh(event) {
+    this.loadInitialData();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 
   segmentChanged(event) {
@@ -46,7 +59,6 @@ export class HomePage {
   }
 
   addNotes() {
-    // this.router.navigate(['add-note']);
     let note = {
       id: ''
     }
@@ -87,6 +99,7 @@ export class HomePage {
               this.all_notes.push(note);
               console.log(this.all_notes);
             });
+            this.noResult = false;
           } else {
             this.noResult = true;
           }
@@ -154,6 +167,18 @@ export class HomePage {
       'name': folderName
     }
     this.router.navigate(['/note-list', folder]);
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+      duration: 2000
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
   }
 
 }

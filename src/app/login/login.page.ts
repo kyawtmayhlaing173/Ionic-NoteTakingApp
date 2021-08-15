@@ -71,6 +71,7 @@ export class LoginPage implements OnInit {
   // Sign Up with email and password
   signUp(email, password, name) {
     this.user.signUp(email, password, name).then((response) => {
+      console.log('Response', response['status']);
       if (response['status']) {
         console.log('Success');
         this.presentToast('Successfully Signup');

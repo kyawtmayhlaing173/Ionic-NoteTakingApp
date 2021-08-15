@@ -89,6 +89,10 @@ export class AddNotePage implements OnInit {
 
   createNewNote() {
     let title = this.noteForm.value.titleControl;
+    console.log('Create New Note', this.folderName);
+    if (!this.folderName) {
+      this.folderName = null;
+    }
     this.storage.get('userData').then((data) => {
       firebase.firestore().collection('notes').add({
         title,
@@ -98,7 +102,7 @@ export class AddNotePage implements OnInit {
         folder: this.folderName
       }).then((res) => {
         this.presentToast('Your note has been saved.');
-        this.navCtrl.navigateRoot(['/home']);
+        this.navCtrl.back();
       });
     });
   }
@@ -114,7 +118,7 @@ export class AddNotePage implements OnInit {
         folder: this.folderName
       }).then(() => {
         this.presentToast('Your note has been successfully updated.');
-        this.navCtrl.pop();
+        this.navCtrl.back();
       });
     });
   }
@@ -137,7 +141,6 @@ export class AddNotePage implements OnInit {
   }
 
   async presentModal() {
-    console.log('Present Modal', this.folderName);
     const modal = await this.modalController.create({
       component: AddFolderModalPage,
       cssClass: 'add-folder-modal-css',
@@ -150,7 +153,9 @@ export class AddNotePage implements OnInit {
     await modal.present();
     modal.onDidDismiss().then((params) => {
       console.log('Modal is dismissed', params.data);
-      this.folderName = params.data;
+      if (params.data) {
+        this.folderName = params.data;
+      }
     });
   }
 
