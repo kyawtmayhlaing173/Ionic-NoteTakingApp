@@ -6,6 +6,9 @@
 
 <ion-content>
   <ion-list>
+    <div *ngIf="noFolder" style="text-align: center;">
+      <p>No Folder Yet</p>
+    </div>
     <ion-radio-group [value]="selectedFolder" (ionChange)="radioGroupChange($event)" mode="ios">
       <ion-item *ngFor="let folder of all_folders">
         <ion-label>

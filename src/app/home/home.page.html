@@ -56,6 +56,10 @@
         </div>
       </ion-col>
     </ion-row>
+    <div class="no-folder" *ngIf="noFolder">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>No Folder yet</p>
+    </div>
     <div class="add-folder">
       <ion-button (click)="showPrompt()">
         <ion-icon name="add-outline"></ion-icon>&nbsp; Add Folders

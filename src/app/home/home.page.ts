@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { PopoverController, AlertController, LoadingController } from '@ionic/angular';
 import * as firebase from 'firebase';
@@ -19,6 +19,7 @@ export class HomePage {
   segment: any = 'notes';
   all_folders: any = [];
   noResult = false;
+  noFolder = false;
 
   constructor(
     private router: Router,
@@ -26,11 +27,9 @@ export class HomePage {
     public storage: Storage,
     public user: UserService,
     public alertCtrl: AlertController,
-    public loadingController: LoadingController
-  ) {
-    this.presentLoading();
-    this.loadInitialData();
-  }
+    public loadingController: LoadingController,
+    public zone: NgZone
+  ) { }
 
   loadInitialData() {
     this.getAllNotes();
@@ -38,7 +37,10 @@ export class HomePage {
     this.getFolders();
   }
 
-  ionViewWillEnter() { }
+  ionViewWillEnter() {
+    this.presentLoading();
+    this.loadInitialData();
+  }
 
   doRefresh(event) {
     this.loadInitialData();
@@ -79,31 +81,34 @@ export class HomePage {
   }
 
   getAllNotes() {
-    this.storage.get('userData').then((data) => {
-      this.all_notes = [];
-      firebase.firestore().collection('notes')
-        .where('createdBy', '==', data.id)
-        .get().then((snapshot) => {
-          console.log(data.id)
-          if (snapshot.size > 0) {
-            snapshot.forEach((doc) => {
-              let note = new NotesService();
-              note.set_id(doc.id);
-              note.set_title(doc.data().title.substring(0, 40));
-              note.set_description(doc.data().description.substring(0, 40));
-              note.set_folder(doc.data().folder);
-              let currentDate = doc.data().createdAt.toDate().toString();
-              currentDate = currentDate.split('2021')[0]
-              console.log(currentDate);
-              note.set_createdAt(currentDate);
-              this.all_notes.push(note);
-              console.log(this.all_notes);
-            });
-            this.noResult = false;
-          } else {
-            this.noResult = true;
-          }
-        });
+    console.log('Get All Notes');
+    this.zone.run(() => {
+      this.storage.get('userData').then((data) => {
+        this.all_notes = [];
+        firebase.firestore().collection('notes')
+          .where('createdBy', '==', data.id)
+          .get().then((snapshot) => {
+            console.log(data.id)
+            if (snapshot.size > 0) {
+              snapshot.forEach((doc) => {
+                let note = new NotesService();
+                note.set_id(doc.id);
+                note.set_title(doc.data().title.substring(0, 40));
+                note.set_description(doc.data().description.substring(0, 40));
+                note.set_folder(doc.data().folder);
+                let currentDate = doc.data().createdAt.toDate().toString();
+                currentDate = currentDate.split('2021')[0]
+                console.log(currentDate);
+                note.set_createdAt(currentDate);
+                this.all_notes.push(note);
+                console.log(this.all_notes);
+              });
+              this.noResult = false;
+            } else {
+              this.noResult = true;
+            }
+          });
+      });
     });
   }
 
@@ -116,10 +121,19 @@ export class HomePage {
 
   getFolders() {
     this.all_folders = [];
-    firebase.firestore().collection('folders').get().then((snap) => {
-      snap.forEach((doc) => {
-        this.all_folders.push(doc.data().name);
-      })
+    this.storage.get('userData').then((data) => {
+      firebase.firestore().collection('folders')
+        .where('createdBy', '==', data.id)
+        .get().then((snap) => {
+          if (snap.size > 0) {
+            snap.forEach((doc) => {
+              this.all_folders.push(doc.data().name);
+            });
+            this.noFolder = false;
+          } else {
+            this.noFolder = true;
+          }
+        });
     });
   }
 
@@ -154,12 +168,15 @@ export class HomePage {
   }
 
   addFolder(folderName) {
-    firebase.firestore().collection('folders').add({
-      name: folderName
-    }).then(() => {
-      console.log('Success');
-      this.getFolders();
-    })
+    this.storage.get('userData').then((data) => {
+      firebase.firestore().collection('folders').add({
+        name: folderName,
+        createdBy: data.id
+      }).then(() => {
+        console.log('Success');
+        this.getFolders();
+      });
+    });
   }
 
   getNotesByFolder(folderName) {

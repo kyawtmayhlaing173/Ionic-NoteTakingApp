@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import * as firebase from 'firebase';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-add-folder-modal',
@@ -11,10 +12,12 @@ export class AddFolderModalPage implements OnInit {
 
   all_folders = [];
   selectedFolder: any;
+  noFolder: any;
 
   constructor(
     private navParams: NavParams,
-    private modalController: ModalController
+    private modalController: ModalController,
+    public storage: Storage,
   ) {
     this.selectedFolder = this.navParams.get('folderName');
     console.log('Selected Folder is ', this.selectedFolder);
@@ -26,9 +29,16 @@ export class AddFolderModalPage implements OnInit {
 
   getFolders() {
     this.all_folders = [];
-    firebase.firestore().collection('folders').get().then((snap) => {
-      snap.forEach((doc) => {
-        this.all_folders.push(doc.data().name);
+    this.storage.get('userData').then((data) => {
+      firebase.firestore().collection('folders').where('createdBy', '==', data.id).get().then((snap) => {
+        if (snap.size > 0) {
+          snap.forEach((doc) => {
+            this.all_folders.push(doc.data().name);
+          });
+          this.noFolder = false;
+        } else {
+          this.noFolder = true;
+        }
       });
     });
   }

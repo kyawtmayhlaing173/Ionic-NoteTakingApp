@@ -102,7 +102,7 @@ export class AddNotePage implements OnInit {
         folder: this.folderName
       }).then((res) => {
         this.presentToast('Your note has been saved.');
-        this.navCtrl.back();
+        this.navCtrl.pop();
       });
     });
   }

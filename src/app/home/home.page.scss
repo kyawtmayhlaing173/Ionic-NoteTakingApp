@@ -122,4 +122,15 @@ ion-label {
         background-image: none;
     }
   }
+  .no-folder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20%;
+    ion-icon {
+      zoom: 2;
+      margin-bottom: 10px;
+    }
+  }
 }
